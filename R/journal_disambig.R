@@ -4,13 +4,14 @@
 #'
 #' @param df data frame with a column of potential journal names
 #' @param column string representing the column name where potential journal names exist
+#' @param remove_periods boolean for whether to remove all remaining periods (e.g., currently "^J." is replaced by "Journal of.")
 #' @return data frame with a new column "journal.disam"
 #'
 #'
 #'
 #' @export
 
-journal_disambig <- function(df,column){
+journal_disambig <- function(df,column,remove_periods = T){
   df$container <- base::trimws(df[[column]])
   df$journal.disam <- df$container
   # Adv[.]? should be Advances -- see Adv for some inspiration
@@ -43,10 +44,16 @@ journal_disambig <- function(df,column){
   df$journal.disam <- str_replace(df$journal.disam, "Bull$", "Bulletin")
   #Bull = Bulletin
   df$journal.disam <- str_replace(df$journal.disam, "Bull\\b", "Bulletin of")
+  # Can. = Canadian (keys on period to ensure note just word "can")
+  df$journal.disam <- str_replace(df$journal.disam, "Can\\.", "Canadian")
+
   # Cem Bas Mat
   df$journal.disam <- str_replace(df$journal.disam, "Cem\\sBas\\sMat[a-z]?\\b", "Cement-Based Materials")
   # Cem Bas Mat
   df$journal.disam <- str_replace(df$journal.disam, "Cem\\-Bas\\sMat[a-z]?\\b", "Cement-Based Materials")
+  # Chem = Chemistry
+  df$journal.disam <- str_replace(df$journal.disam, "Chem\\b", "Chemistry")
+
   # Civ = Civil
   df$journal.disam <- str_replace(df$journal.disam, "Civ\\b", "Civil")
   # Climatol = Climatology
@@ -81,7 +88,10 @@ journal_disambig <- function(df,column){
   df$journal.disam <- str_replace(df$journal.disam, "Epidemiol\\b", "Epidemiology")
   # European Euro
   df$journal.disam <- str_replace(df$journal.disam, "Euro?\\b", "European")
-  # Genet
+  # For. = Forest (note this keys on period to ensure not just word "for")
+  df$journal.disam <- str_replace(df$journal.disam, "For\\.", "Forest")
+
+   # Genet
   df$journal.disam <- str_replace(df$journal.disam, "Genet\\b", "Genetics")
   # Geophys
   df$journal.disam <- str_replace(df$journal.disam, "Geophys\\b", "Geophysics")
@@ -105,6 +115,9 @@ journal_disambig <- function(df,column){
   df$journal.disam <- str_replace(df$journal.disam, "\\bJ$", "Journal")
   # J[.]? should be journal of, if at start
   df$journal.disam <- str_replace(df$journal.disam, "\\bJ\\,?\\b", "Journal of")
+  # Manage, Man = Management
+  df$journal.disam <- str_replace(df$journal.disam, "Man\\b|Manage\\b", "Management")
+
   # Mater = Materials
   df$journal.disam <- str_replace(df$journal.disam, "Mat\\b|Mater\\b", "Materials")
   # Mech = Mechanical
@@ -135,10 +148,17 @@ journal_disambig <- function(df,column){
   df$journal.disam <- str_replace(df$journal.disam, "Rev$", "Review")
   # Rev. = Review of
   df$journal.disam <- str_replace(df$journal.disam, "Rev\\b", "Review of")
+  # Wildl = Wildlife
+  df$journal.disam <- str_replace(df$journal.disam, "Wildl\\b", "Wildlife")
+
   # Zool = Zoology
   df$journal.disam <- str_replace(df$journal.disam, "Zool\\b", "Zoology")
   # Checking on match improvement
   df$journal.disam <- trimws(df$journal.disam)
+  if(remove_periods){
+  #remove all periods
+    df$journal.disam <- str_remove_all(df$journal.disam,'\\.')
+    }
   df <- df[,colnames(df)!='container']
   return(df)
 }

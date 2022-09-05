@@ -4,12 +4,14 @@
 \alias{journal_disambig}
 \title{Diambiguating journal names}
 \usage{
-journal_disambig(df, column)
+journal_disambig(df, column, remove_periods = T)
 }
 \arguments{
 \item{df}{data frame with a column of potential journal names}
 
 \item{column}{string representing the column name where potential journal names exist}
+
+\item{remove_periods}{boolean for whether to remove all remaining periods (e.g., currently "^J." is replaced by "Journal of.")}
 }
 \value{
 data frame with a new column "journal.disam"
