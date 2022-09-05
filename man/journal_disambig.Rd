@@ -4,10 +4,12 @@
 \alias{journal_disambig}
 \title{Diambiguating journal names}
 \usage{
-journal_disambig(df)
+journal_disambig(df, column)
 }
 \arguments{
-\item{df}{data frame with a column of potential journal names, named "container"}
+\item{df}{data frame with a column of potential journal names}
+
+\item{column}{string representing the column name where potential journal names exist}
 }
 \value{
 data frame with a new column "journal.disam"

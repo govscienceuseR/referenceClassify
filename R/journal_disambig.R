@@ -2,19 +2,16 @@
 #'
 #' Creates a new column for extended journal names based on known abbreviations from LINK AND LINK
 #'
-#' @param df data frame with a column of potential journal names, named "container"
-#'
+#' @param df data frame with a column of potential journal names
+#' @param column string representing the column name where potential journal names exist
 #' @return data frame with a new column "journal.disam"
 #'
-#' @examples
 #'
 #'
 #' @export
 
-
-journal_disambig <- function(df){
-  df$container <- base::trimws(df$container)
-
+journal_disambig <- function(df,column){
+  df$container <- base::trimws(df[[column]])
   df$journal.disam <- df$container
   # Adv[.]? should be Advances -- see Adv for some inspiration
   df$journal.disam <- str_replace(df$journal.disam, "Adv\\b|Advn\\b", "Advances in")
@@ -140,9 +137,8 @@ journal_disambig <- function(df){
   df$journal.disam <- str_replace(df$journal.disam, "Rev\\b", "Review of")
   # Zool = Zoology
   df$journal.disam <- str_replace(df$journal.disam, "Zool\\b", "Zoology")
-
   # Checking on match improvement
   df$journal.disam <- trimws(df$journal.disam)
-
+  df <- df[,colnames(df)!='container']
   return(df)
 }
