@@ -3,7 +3,6 @@
 #' Creates a new column for extended journal names based on known abbreviations from LINK AND LINK
 #'
 #' @param dt data frame with a column of potential journal names
-#' @param column string representing the column name where potential journal names exist
 #' @param remove_periods boolean for whether to remove all remaining periods (e.g., currently "^J." is replaced by "Journal of.")
 #' @return data frame with a new column "journal.disam"
 #'
@@ -12,11 +11,11 @@
 #'
 #' @export
 
-journal_disambig <- function(dt,column,remove_periods = T){
+journal_disambig <- function(dt, remove_periods = T){
 
   j_index <- fread("~/Documents/Davis/R-Projects/citationClassify/data/indices/journal_abbr.csv")
 
-  dt[[column]] <- base::trimws(dt[[column]])
+  dt$container <- base::trimws(dt$container)
   dt$journal.disam <- dt$container
 
   output <- which(dt$journal.disam %in% j_index$abbr)
