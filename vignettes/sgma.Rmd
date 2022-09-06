@@ -1,0 +1,54 @@
+---
+title: "sgma"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sgma}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+packs = c('data.table', 'dplyr', 'stringr')
+sapply(packs, require, character.only = T)
+library(citationClassify)
+```
+
+```{r}
+dt <- fread("~/Box/citation_classifier/data/gsp_references_clean.csv")
+```
+
+```{r}
+table(journal_match(dt$container))
+```
+
+```{r}
+table(conference_match(dt$container))
+```
+
+```{r}
+table(agency_match(dt$container, dt$author))
+```
+
+```{r}
+dt_clean <- journal_disambig(dt)
+```
+
+```{r}
+table(journal_match(dt_clean$journal.disam))
+```
+
+```{r}
+table(conference_match(dt_clean$journal.disam))
+```
+
+```{r}
+table(agency_match(dt_clean$journal.disam, dt_clean$author))
+```
+

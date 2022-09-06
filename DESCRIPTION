@@ -23,3 +23,7 @@ Imports:
     magrittr,
     data.table,
     stringr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
