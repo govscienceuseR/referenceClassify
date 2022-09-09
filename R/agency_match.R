@@ -3,9 +3,9 @@
 #' Creates a logical vector as to whether an author name or publication name is an exact match to an index of government agencies
 #'
 #' @param x a vector of potential agency names, typically the container or journal.disam column from the govscienceuseR workflow
-#' @param y a econd vector of potential agency namess, typically the author column from the govscienceuseR workflow
+#' @param y a second vector of potential agency namess, typically the author column from the govscienceuseR workflow
 #' @param append T or F argument to whether user wants to add their own list of agencies to be indexed. Default append = F
-#' @param append_df a data frame with three character columns: State (level of government), Agency (name of agency), and Abbr (abbreviation of agency) to append to the built-in index
+#' @param append_df if append = T, a data frame with three character columns named 'State' (level of government), 'Agency' (name of agency), and 'Abbr' (abbreviation of agency) to append to the built-in index
 #'
 #' @return logical vector indicating an exact match to the agency index
 #'

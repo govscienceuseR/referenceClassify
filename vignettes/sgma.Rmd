@@ -37,18 +37,18 @@ table(agency_match(dt$container, dt$author))
 ```
 
 ```{r}
-dt_clean <- journal_disambig(dt)
+dt_disam$journal.disam <- journal_disambig(dt$container)
 ```
 
 ```{r}
-table(journal_match(dt_clean$journal.disam))
+table(journal_match(dt_disam$journal.disam))
 ```
 
 ```{r}
-table(conference_match(dt_clean$journal.disam))
+table(conference_match(dt_disam$journal.disam))
 ```
 
 ```{r}
-table(agency_match(dt_clean$journal.disam, dt_clean$author))
+table(agency_match(dt_disam$journal.disam, dt_disam$author))
 ```
 
