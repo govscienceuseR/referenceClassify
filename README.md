@@ -17,11 +17,18 @@ This package expects users to begin with data table of (potential) citations tha
 
 Three functions, `journal_match()`, `agency_match()`, and `conference_match()`, look for exact matches to indices of journal, agency, and conferences names. Each function outputs a logical vector for whether there is an exact match to an index per potential citation. The default indices are journal and conference lists from [Scimago](https://rdrr.io/github/ikashnitsky/sjrdata/man/sjr_journals.html), and the agency list was constructed by the package authors with US federal agencies and partially comprehensive state-level agencies. Each function has the option to append additional data to the indices for greater personalization of the tool. For example, if the documents are from the EU, or specific to country-level agencies in a state, a new index of these agencies can be added. 
 
-### 2. Disambiguate the journals based on common abbreviations   
+### 2. Reallocate authorship based on "prepared by" text  
 
-The `journal_disambig()` function takes one argument: ref_dir. The function transforms the JSON files in the reference directory (ref_dir) to tabular data and compiles them all into one data frame, adding the file name as an identifier.    
+This should maybe go into the `citation_clean()` function instead?
 
-### 3. Clean and filter the citation data frame    
+### 3. Disambiguate the journals based on common abbreviations   
 
-The `citation_clean` takes one argument: dt, which is the data table output by the `citation_compile()` function. The function goes through a series of steps to try to improve Anystyle's citation output. For each column the function unlists the data and filters out unlikely candidates. For instance, if a number listed in the date column does not match any reasonable date format or expectation, it is removed. If a string in the URL column actually resembles a DOI, it is moved to that column. And so on.  
+The `journal_disambig()` function takes one argument: a column containing (potential) journal names. If working through the govscienceuseR workflow, this column name is 'container'. The column is first matched against an official index of journal abbreviations, and then remaining, unmatched potential journal names are run through a series of regular expressions for detecting typical or observed journal abbreviations. The output is a new vector of journal names that have been changed to their complete journal or agency name is matched to an abbreviation. After running the `journal_disambig()` function it can be nice to check back in on the reference matching functions (Step 1) to see how many exact matches have been gained from the disambiguation process.  
+
+### 4. Classify the citations into general groupings  
+
+The `classify_nnet()` function ...
+
+
+
 

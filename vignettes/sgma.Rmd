@@ -35,6 +35,9 @@ table(conference_match(dt$container))
 ```{r}
 table(agency_match(dt$container, dt$author))
 ```
+```{r}
+dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
+```
 
 ```{r}
 dt$journal.disam <- journal_disambig(dt$container)

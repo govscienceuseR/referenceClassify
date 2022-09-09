@@ -14,35 +14,43 @@
 #' @export
 #'
 
+#Retrieved from
 prepared_by <- function(df, x, y, z){
   # Just to be sure
   df <- data.frame(df)
-  prep_pattern <- c("^[Pp]repared ([Bb]y|[Ff]or) [a-z]+?",
-                    "^[Pp]ublished ([Bb]y|[Ii]n) [a-z]+",
-                    "^[Rr]eport ([Bb]y|[Ff]or|[Tt]o) [a-z]+",
-                    "^[Ss]ubmitted ([Tt]o|[Ff]or) [a-z]+")
-  author_pattern <- c("(?<=[Pp]repared ([Bb]y|[Ff]or)\\s(the)?).*",
+  # A simple function
+  rpl_na <- function(x){
+    ifelse(x == "", NA, x)
+  }
+  # I would typically do this with a df
+  df <- data.frame(sapply(df, rpl_na))
+
+  prep_pattern <- paste(c("^[Pp]repared ([Bb]y|[Ff]or) [a-z+]?",
+                    "^[Pp]ublished ([Bb]y|[Ii]n) [a-z+]?",
+                    "^[Rr]eport ([Bb]y|[Ff]or|[Tt]o) [a-z+]?",
+                    "^[Ss]ubmitted ([Tt]o|[Ff]or) [a-z+]?"), collapse = "|")
+  author_pattern <- paste(c("(?<=[Pp]repared ([Bb]y|[Ff]or)\\s(the)?).*",
                       "(?<=[Pp]ublished ([Bb]y|[Ii]n)\\s(the)?).*",
                       "(?<=[Rr]eport ([Bb]y|[Ff]or|[Tt]o)\\s(the)?).*",
-                      "(?<=[Ss]ubmitted ([Tt]o|[Ff]or)\\s(the)?).*")
-  other_pattern <- c("(?<=[Pp]repared ([Bb]y|[Ff]or)\\s).*",
+                      "(?<=[Ss]ubmitted ([Tt]o|[Ff]or)\\s(the)?).*"), collapse = "|")
+  other_pattern <- paste(c("(?<=[Pp]repared ([Bb]y|[Ff]or)\\s).*",
                      "(?<=[Pp]ublished ([Bb]y|[Ii]n)\\s).*",
                      "(?<=[Rr]eport ([Bb]y|[Ff]or|[Tt]o)\\s).*",
-                     "(?<=[Ss]ubmitted ([Tt]o|[Ff]or)\\s).*")
+                     "(?<=[Ss]ubmitted ([Tt]o|[Ff]or)\\s).*"), collapse = "|")
 
   #Prepared by sections -- moving these over to author or publisher
   for (i in 1:nrow(df)){
-    prep.by <- str_detect(df[,x[i]], prep_pattern)
+    prep.by <- str_detect(df[i,x], prep_pattern)
     # Need to look up this anything followed by)
-    df[,y[i]] <- ifelse(prep.by == T & is.na(df[,y[i]]),
-                     str_extract(df[,x[i]], author_pattern),
-                     df[,y[i]])
-    df[,z[i]] <- ifelse(prep.by == T & !is.na(df[,y[i]]) & is.na(df[,z[i]]),
-                        str_extract(df[,x[i]], other_pattern),
-                        df[,z[i]])
-    df[,x[i]] <- ifelse(prep.by == T,
-                            str_extract(df[,x[i]], other_pattern),
-                            df[,x[i]])
+    df[i,y] <- ifelse(prep.by == T & is.na(df[i,y]),
+                     str_extract(df[i,x], author_pattern),
+                     df[i,y])
+    df[i,z] <- ifelse(prep.by == T & !is.na(df[i,y]) & is.na(df[i,z]),
+                        str_extract(df[i,x], other_pattern),
+                        df[i,z])
+    df[i,x] <- ifelse(prep.by == T,
+                            str_extract(df[i,x], other_pattern),
+                            df[i,x])
   }
-  return(df)
+  return(data.table(df))
 }
