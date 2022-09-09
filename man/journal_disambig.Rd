@@ -2,20 +2,22 @@
 % Please edit documentation in R/journal_disambig.R
 \name{journal_disambig}
 \alias{journal_disambig}
-\title{Diambiguating journal names}
+\title{Disambiguate Journal Names}
 \usage{
-journal_disambig(df, column, remove_periods = T)
+journal_disambig(x, remove_periods = T)
 }
 \arguments{
-\item{df}{data frame with a column of potential journal names}
-
-\item{column}{string representing the column name where potential journal names exist}
+\item{x}{a column containing (potential) journal names. If working through the govscienceuseR workflow, this column name is 'container'}
 
 \item{remove_periods}{boolean for whether to remove all remaining periods (e.g., currently "^J." is replaced by "Journal of.")}
 }
 \value{
-data frame with a new column "journal.disam"
+a vector with disambiguated journal names
 }
 \description{
-Creates a new column for extended journal names based on known abbreviations from LINK AND LINK
+Creates a new column for extended journal names based on known abbreviations from \href{https://xpertscientific.com/en/journal-abbreviations/}{ISO documentation from XpertScientific}
+}
+\examples{
+dt_clean <- journal_disambig(dt$container)
+
 }

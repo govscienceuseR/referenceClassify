@@ -1429,7 +1429,7 @@ $", "New England Journal of Medicine")
   # ZAMM Zeitschrift Für Angewandte Mathematik Und Mechanik
   x <- str_replace(x, "^ZAMM‐Journal of Applied Mathematics and Mechanics/Zeitschrift Fuf Grund Der Plastizitätsbedingung Fü$", "ZAMM Zeitschrift Für Angewandte Mathematik Und Mechanik")
 
-  if(remove_periods = T){
+  if(remove_periods){
     #remove all periods
     x <- str_remove_all(x, '\\.')
   }
