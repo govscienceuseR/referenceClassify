@@ -13,8 +13,7 @@
 journal_disambig <- function(x, remove_periods = T){
   #journal_abbr <- data.table(readRDS("data/journal_abbr.RDS"))
   #usethis::use_data(journal_abbr)
-  data("journal_abbr")
-  journal_abbr <- fread("data/indices/journal_abbr.csv")
+  data("journal_abbr", envir=environment())
 
   x <- base::trimws(x)
 

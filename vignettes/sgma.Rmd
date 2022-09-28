@@ -24,18 +24,18 @@ sapply(packs, require, character.only = T)
 dt <- fread("~/Box/citation_classifier/data/gsp_references_clean.csv")
 ```
 
-```{r, eval = F}
+```{r}
 table(journal_match(dt$container))
 ```
 
-```{r, eval = F}
+```{r}
 table(conference_match(dt$container))
 ```
 
-```{r, eval = F}
+```{r}
 table(agency_match(dt$container, dt$author))
 ```
-```{r, eval = F}
+```{r}
 dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 ```
 
@@ -43,15 +43,15 @@ dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 dt$journal.disam <- journal_disambig(dt$container)
 ```
 
-```{r, eval = F}
+```{r}
 table(journal_match(dt$journal.disam))
 ```
 
-```{r, eval = F}
+```{r}
 table(conference_match(dt$journal.disam))
 ```
 
-```{r, eval = F}
+```{r}
 table(agency_match(dt$journal.disam, dt$author))
 ```
 
