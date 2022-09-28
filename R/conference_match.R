@@ -13,7 +13,7 @@
 conference_match <- function(x){
   #scimago.c <- data.table(readRDS("data/conference_list.RDS"))
   #usethis::use_data(scimago.c)
-  data("scimago.c")
+  data("scimago.c", envir=environment())
   conference_match <- ifelse(x %in% scimago.c$title, T, F)
   return(conference_match)
 }

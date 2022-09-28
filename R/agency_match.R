@@ -16,7 +16,7 @@
 agency_match <- function(x, y, append = F, append_df){
   #agencies <- data.table(readRDS("data/agencies.RDS"))
   #usethis::use_data(agencies)
-  data("agencies")
+  data("agencies", envir=environment())
   if(append == T){
     agencies <- rbind(agencies, append_df)
   }
