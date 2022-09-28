@@ -11,17 +11,19 @@
 #' @export
 
 journal_disambig <- function(x, remove_periods = T){
-
-  j_index <- fread("~/Documents/Davis/R-Projects/citationClassify/data/indices/journal_abbr.csv")
+  #journal_abbr <- data.table(readRDS("data/journal_abbr.RDS"))
+  #usethis::use_data(journal_abbr)
+  data("journal_abbr")
+  journal_abbr <- fread("data/indices/journal_abbr.csv")
 
   x <- base::trimws(x)
 
   # 1. Looking for exact matches to an index of abbreviated journals
-  output <- which(x %in% j_index$abbr)
+  output <- which(x %in% journal_abbr$abbr)
   for(i in output){
-    for(j in 1:nrow(j_index)){
-      x[i] <- ifelse(x[i] == j_index$abbr[j],
-                                    j_index$title[j], x[i])
+    for(j in 1:nrow(journal_abbr)){
+      x[i] <- ifelse(x[i] == journal_abbr$abbr[j],
+                                    journal_abbr$title[j], x[i])
     }
   }
 

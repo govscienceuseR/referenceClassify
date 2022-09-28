@@ -13,7 +13,9 @@
 #' @export
 
 journal_match <- function(x, append = F, append_df){
-  scimago.j <- fread("~/Box/truckee/data/eia_data/journal_list.csv", fill= T)
+  #scimago.j <- data.table(readRDS("data/journal_list.RDS"))
+  #usethis::use_data(scimago.j)
+  data("scimago.j")
   if(append == T){
     scimago.j <- rbind(scimago.j, append_df)
   }

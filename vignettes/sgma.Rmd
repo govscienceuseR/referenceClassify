@@ -15,43 +15,43 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+library(citationClassify)
 packs = c('data.table', 'dplyr', 'stringr')
 sapply(packs, require, character.only = T)
-library(citationClassify)
 ```
 
 ```{r}
 dt <- fread("~/Box/citation_classifier/data/gsp_references_clean.csv")
 ```
 
-```{r}
+```{r, eval = F}
 table(journal_match(dt$container))
 ```
 
-```{r}
+```{r, eval = F}
 table(conference_match(dt$container))
 ```
 
-```{r}
+```{r, eval = F}
 table(agency_match(dt$container, dt$author))
 ```
-```{r}
+```{r, eval = F}
 dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 ```
 
-```{r}
+```{r, eval = F}
 dt$journal.disam <- journal_disambig(dt$container)
 ```
 
-```{r}
+```{r, eval = F}
 table(journal_match(dt$journal.disam))
 ```
 
-```{r}
+```{r, eval = F}
 table(conference_match(dt$journal.disam))
 ```
 
-```{r}
+```{r, eval = F}
 table(agency_match(dt$journal.disam, dt$author))
 ```
 

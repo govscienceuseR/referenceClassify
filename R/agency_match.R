@@ -14,7 +14,9 @@
 #' @export
 
 agency_match <- function(x, y, append = F, append_df){
-  agencies <- fread("~/Box/truckee/data/eia_data/agency_list.csv")
+  #agencies <- data.table(readRDS("data/agencies.RDS"))
+  #usethis::use_data(agencies)
+  data("agencies")
   if(append == T){
     agencies <- rbind(agencies, append_df)
   }
