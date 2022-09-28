@@ -39,7 +39,7 @@ table(agency_match(dt$container, dt$author))
 dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 ```
 
-```{r, eval = F}
+```{r}
 dt$journal.disam <- journal_disambig(dt$container)
 ```
 
