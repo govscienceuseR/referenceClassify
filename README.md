@@ -27,7 +27,7 @@ The `journal_disambig()` function takes one argument: a column containing (poten
 
 ### 4. Classify the citations into general groupings  
 
-The `classify_nnet()` function ...
+The `classify_nnet()` function feeds the data into a keras model, trained using data from environmental impact assessments. The input is a data.table with the following columns: author, title, publisher, and journal. The columns are used as inputs for a single feature, multi-class model to predict the likelihood that a reference is to an agency, a journal, a conference, or not a citation.  
 
 
 
