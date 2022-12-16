@@ -19,7 +19,7 @@ prepared_by(df, x, y, z)
 a data frame with changes made to the three input columns
 }
 \description{
-Identified patterns commonly found in references such as "Prepared by", "Submitted to", "Report for", etc. that key into authorship and source, and reallocates the following source either to the publisher or author columns
+Identifies patterns commonly found in references such as "Prepared by", "Submitted to", "Report for", etc. that key into authorship and source, and reallocates the following source either to the publisher or author columns
 }
 \examples{
 df <- prepared_by(df, 'container', 'author', 'publisher')

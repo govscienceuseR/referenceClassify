@@ -1,6 +1,6 @@
 #' Reallocate 'Prepared by' Authorship
 #'
-#' Identified patterns commonly found in references such as "Prepared by", "Submitted to", "Report for", etc. that key into authorship and source, and reallocates the following source either to the publisher or author columns
+#' Identifies patterns commonly found in references such as "Prepared by", "Submitted to", "Report for", etc. that key into authorship and source, and reallocates the following source either to the publisher or author columns
 #'
 #' @param df a data frame or data table
 #' @param x character, the name of the column containing (potential) journal names. If working through the govscienceuseR workflow, this column name is 'container'
