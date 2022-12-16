@@ -3,10 +3,11 @@
 #' Matches citations to journals, agencies, conferences, and patterns of non-matches (e.g. dates, photos, etc.) to classify them into one of those four groups.
 #'
 #' @param df a data frame or data table output from the journal_disambig() function (has columns:)
+#' @param journal_column the name
 #'
 #' @return a data frame with two new columns: training_column and class
 #'
-#' @examples df <- regex_classify(df)
+#' @examples df <- regex_classify(df, 'journal_disam')
 #'
 #' @export
 #'
@@ -150,7 +151,7 @@ df <- df %>%
   df <- df %>%
     mutate(class = case_when(
       #  Remove if it is in the removal patterns
-      str_detect(training_column, rm.row) ~ "remove_row",
+      str_detect(training_column, rm_row) ~ "remove_row",
       # Remove if it is very short or long
       nchar(training_column) > 250 | nchar(training_column) < 3 ~ "remove_row",
       # Assign journal name if exact match
