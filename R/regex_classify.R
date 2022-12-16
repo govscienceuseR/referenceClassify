@@ -62,9 +62,9 @@ regex_classify <- function(df, journal_column){
 
   df$container_match_journal <- journal_match(df[[journal_column]])
   df$pub_match_journal <- journal_match(df$publisher)
-  df$container_match_agency <- agency_match(df[[journal_column]])
-  df$author_match_agency <- agency_match(df$author)
-  df$pub_match_agency <- agency_match(df$publisher)
+  df$container_match_agency <- agency_match(df[[journal_column]], df[[journal_column]])
+  df$author_match_agency <- agency_match(df$author, df$author)
+  df$pub_match_agency <- agency_match(df$publisher, df$publisher)
   df$container_match_conf <- conference_match(df[[journal_column]])
   df$pub_match_conf <- conference_match(df$publisher)
   df$container_match_agency_p <- str_detect(df[[journal_column]], agency.pattern)

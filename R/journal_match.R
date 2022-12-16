@@ -10,6 +10,7 @@
 #'
 #' @examples dt$journal_match <- journal_match(dt$container)
 #'
+#'
 #' @export
 
 journal_match <- function(x, append = F, append_df){
