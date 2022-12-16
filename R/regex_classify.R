@@ -9,6 +9,8 @@
 #'
 #' @examples df <- regex_classify(df, 'journal_disam')
 #'
+#' @import magrittr
+#' @import stringr
 #' @export
 #'
 
@@ -16,6 +18,7 @@ regex_classify <- function(df, journal_column){
   data("scimago.j", envir=environment())
   data("agencies", envir=environment())
   data("scimago.c", envir=environment())
+  agency.pattern <- paste(agencies$Agency, collapse = "\\b|\\b")
 
   # These should have already been removed in the citation_clean function, but just in case
   rm_word <- c( '^[a-z]\\.\\s', # Many authors begind with a. b. or c. etc as if its a list.
@@ -57,13 +60,16 @@ regex_classify <- function(df, journal_column){
            publisher = str_remove_all(publisher, rm_word),
            title = str_remove_all(title, rm_word))
 
-  df$container_match_journal <- df[[journal_column]] %in% scimago.j$title
-  df$pub_match_journal <- df$publisher %in% scimago.j$title
-  df$container_match_agency <- df[[journal_column]] %in% agencies$Agency
-  df$author_match_agency <- df$author %in% agencies$Agency
-  df$pub_match_agency <- df$publisher %in% agencies$Agency
-  df$container_match_conf <- df[[journal_column]] %in% scimago.c$title
-  df$pub_match_conf <- df$publisher %in% scimago.c$title
+  df$container_match_journal <- journal_match(df[[journal_column]])
+  df$pub_match_journal <- journal_match(df$publisher)
+  df$container_match_agency <- agency_match(df[[journal_column]])
+  df$author_match_agency <- agency_match(df$author)
+  df$pub_match_agency <- agency_match(df$publisher)
+  df$container_match_conf <- conference_match(df[[journal_column]])
+  df$pub_match_conf <- conference_match(df$publisher)
+  df$container_match_agency_p <- str_detect(df[[journal_column]], agency.pattern)
+  df$author_match_agency_p <- str_detect(df$author, agency.pattern)
+  df$pub_match_agency_p <- str_detect(df$publisher, agency.pattern)
 
 df <- df %>%
     mutate(training_column = case_when(
@@ -74,6 +80,9 @@ df <- df %>%
       pub_match_agency == T ~ publisher,
       container_match_conf == T ~ container,
       pub_match_conf == T ~ publisher,
+      container_match_agency_p ~ container,
+      author_match_agency_p ~ author,
+      pub_match_agency_p ~ publisher,
       !is.na(doi) ~ doi,
       !is.na(container) ~ container,
       !is.na(publisher) ~ publisher,
