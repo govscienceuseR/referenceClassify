@@ -12,22 +12,13 @@
 
 
 keras_classify <- function(df){
-  df <- df %>%
-    mutate_all(na_if,"") %>%
-    mutate(training_input = case_when(
-      !is.na(container) ~ container,
-      !is.na(title) ~ title,
-      !is.na(author) ~ author,
-      !is.na(publisher) ~ publisher,
-      T ~ "EMPTY"
-    ))
 
   # REMOVE THOSE THAT ALREADY HAVE JOURNAL OR AGENCY IDENTIFIED !
   df_classify <- filter(df, !is.na(training_input))
   classify_x <- df_classify$training_input
   df_na <- filter(df, is.na(training_input))
 
-  model <- keras::load_model_tf("data/eia_model/")
+  model <- keras::load_model_tf("~/Desktop/single_multiclass_model.tf/")
 
   pred <- model %>%
     predict(classify_x) %>%

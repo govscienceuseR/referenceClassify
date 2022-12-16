@@ -5,7 +5,7 @@
 #' @param df a data frame or data table output from the journal_disambig() function (has columns:)
 #' @param journal_column the name
 #'
-#' @return a data frame with two new columns: training_column and class
+#' @return a data frame with two new columns: training_input and class
 #'
 #' @examples df <- regex_classify(df, 'journal_disam')
 #'
@@ -72,7 +72,7 @@ regex_classify <- function(df, journal_column){
   df$pub_match_agency_p <- str_detect(df$publisher, agency.pattern)
 
 df <- df %>%
-    mutate(training_column = case_when(
+    mutate(training_input = case_when(
       container_match_journal == T ~ container,
       pub_match_journal == T ~ publisher,
       author_match_agency == T ~ author, # choosing this because in cases where both match, Federal Reg is more likely to be the journal and the more specific name in the author line
@@ -91,7 +91,7 @@ df <- df %>%
       T ~ NA_character_
     )) %>%
   # Get rid of data that has nothing to train on
-    filter(!is.na(training_column))
+    filter(!is.na(training_input))
 
   rm_row <- c( "^[0-9]+$", # only digits
                "^_\\d", # Starting with an underscore then number indicates it is probably a file
@@ -160,9 +160,9 @@ df <- df %>%
   df <- df %>%
     mutate(class = case_when(
       #  Remove if it is in the removal patterns
-      str_detect(training_column, rm_row) ~ "remove_row",
+      str_detect(training_input, rm_row) ~ "remove_row",
       # Remove if it is very short or long
-      nchar(training_column) > 250 | nchar(training_column) < 3 ~ "remove_row",
+      nchar(training_input) > 250 | nchar(training_input) < 3 ~ "remove_row",
       # Assign journal name if exact match
       container_match_journal == T | pub_match_journal == T ~ "journal",
       # Assign agency if exact match
