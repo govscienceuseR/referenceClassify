@@ -8,6 +8,7 @@
 #'
 #' @examples dt_clean <- journal_disambig(dt$container)
 #'
+#' @import stringr
 #' @export
 
 journal_disambig <- function(x, remove_periods = T){

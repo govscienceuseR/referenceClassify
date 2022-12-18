@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+devtools::install_github("govscienceuseR/citationClassify")
 library(citationClassify)
 packs = c('data.table', 'dplyr', 'stringr')
 sapply(packs, require, character.only = T)

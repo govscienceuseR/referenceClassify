@@ -10,6 +10,7 @@
 #' @examples df <- regex_classify(df, 'journal_disam')
 #'
 #' @import magrittr
+#' @import dplyr
 #' @import stringr
 #' @export
 #'

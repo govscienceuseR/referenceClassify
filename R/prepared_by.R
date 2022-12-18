@@ -11,6 +11,7 @@
 #'
 #' @examples df <- prepared_by(df, 'container', 'author', 'publisher')
 #'
+#' @import stringr
 #' @export
 #'
 
