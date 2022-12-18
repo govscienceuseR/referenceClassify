@@ -21,7 +21,7 @@
 keras_classify <- function(df, probability = .9,
                            journal_column, auto_input = T, input_column){
 
-  data(keras::load_model_tf("keras_model"), envir=environment())
+  #data(keras::load_model_tf("keras_model"), envir=environment())
   model <- keras::load_model_tf("data/keras_model")
 
   if(auto_input == T){
@@ -56,7 +56,7 @@ keras_classify <- function(df, probability = .9,
 
   pred <- model %>%
     predict(df$input) %>%
-    data.frame(.) %>%
+    data.table(.) %>%
     rename("class_journal" = "V1", "class_agency" = "V2",
            "class_conference" = "V4", "class_none" = "V3") %>%
     mutate(predict_class = case_when(

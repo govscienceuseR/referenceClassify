@@ -68,6 +68,7 @@ table(dt$class)
 ```{r, eval = F}
 dt_classified <- filter(dt, !is.na(class))
 dt_toclassify <- filter(dt, is.na(class))
-predictions <- keras_classify(dt_toclassify, probability = .9, 'journal_disam', auto_input = T)
+predictions <- keras_classify(dt_toclassify, probability = .9, 
+                              'journal_disam', auto_input = T)
 ```
 
