@@ -25,9 +25,13 @@ This should maybe go into the `citation_clean()` function instead?
 
 The `journal_disambig()` function takes one argument: a column containing (potential) journal names. If working through the govscienceuseR workflow, this column name is 'container'. The column is first matched against an official index of journal abbreviations, and then remaining, unmatched potential journal names are run through a series of regular expressions for detecting typical or observed journal abbreviations. The output is a new vector of journal names that have been changed to their complete journal or agency name is matched to an abbreviation. After running the `journal_disambig()` function it can be nice to check back in on the reference matching functions (Step 1) to see how many exact matches have been gained from the disambiguation process.  
 
-### 4. Classify the citations into general groupings  
+### 4. Classify the citations into general groupings using regular expressions  
 
-The `classify_nnet()` function feeds the data into a keras model, trained using data from environmental impact assessments. The input is a data.table with the following columns: author, title, publisher, and journal. The columns are used as inputs for a single feature, multi-class model to predict the likelihood that a reference is to an agency, a journal, a conference, or not a citation.  
+The `regex_classify()` function uses regular expressions to sort matched items into classes...
+
+### 5. Classify the citations into general groupings using Keras neural network    
+
+The `keras_classify()` function feeds the data into a keras model, trained using data from environmental impact assessments. The input is a data.table with the following columns: author, title, publisher, and journal. The columns are used as inputs for a single feature, multi-class model to predict the likelihood that a reference is to an agency, a journal, a conference, or not a citation.  
 
 
 
