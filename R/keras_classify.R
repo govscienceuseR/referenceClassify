@@ -15,6 +15,7 @@
 #' @import keras
 #' @import tensorflow
 #' @import dplyr
+#' @import data.table
 #' @export
 
 
