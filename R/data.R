@@ -25,14 +25,6 @@
 #' @source \url{https://rdrr.io/github/ikashnitsky/sjrdata/man/sjr_journals.html}
 "scimago.j"
 
-#' A list of journals from the Scimago database
-#'
-#' All journals between 2000-2020
-#'
-#' @format A data frame with 32227 rows and 1 variable
-
-#' @source \url{https://rdrr.io/github/ikashnitsky/sjrdata/man/sjr_journals.html}
-"scimago.j"
 
 #' A list of conferences from the Scimago database
 #'
@@ -43,3 +35,11 @@
 #' @source \url{https://rdrr.io/github/ikashnitsky/sjrdata/man/sjr_journals.html}
 "scimago.c"
 
+#' Keras model
+#'
+#' A neural network trained on EIA data
+#'
+#' @format A keras model object
+
+#' @source \url{input URL}
+"keras_model"

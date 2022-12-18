@@ -40,18 +40,22 @@ dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 ```
 
 ```{r}
-dt$journal.disam <- journal_disambig(dt$container)
+dt$journal_disam <- journal_disambig(dt$container)
 ```
 
 ```{r}
-table(journal_match(dt$journal.disam))
+table(journal_match(dt$journal_disam))
 ```
 
 ```{r}
-table(conference_match(dt$journal.disam))
+table(conference_match(dt$journal_disam))
 ```
 
 ```{r}
-table(agency_match(dt$journal.disam, dt$author))
+table(agency_match(dt$journal_disam, dt$author))
+```
+
+```{r}
+dt <- regex_classify(dt, 'journal_disam')
 ```
 
