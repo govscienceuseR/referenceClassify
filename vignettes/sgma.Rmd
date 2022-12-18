@@ -1,12 +1,16 @@
 ---
-title: "sgma"
+title: "citationClassify"
+subtitle: "A vignette using California's Groundwater Sustainability Plan documents"
+output: html_document
+---
+<!----
+These were in the yaml but the html won't render to the vignette folder and that is annoying to me, so instead i run this: rmarkdown::render('vignettes/sgma.Rmd', output_dir = 'vignettes')
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{sgma}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
-
+--->
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -14,17 +18,23 @@ knitr::opts_chunk$set(
 )
 ```
 
+The citationClassify tool from govscienceuseR is designed to take a data frame of tagged citation data (author, year, container, publisher, doi, etc), run exact matching to various citation indices, and further classify potential citations into categories. We walk through these steps using California's Groundwater Sustainability Plan PDF documents. Check out the [vignette on the citationExtract](http://htmlpreview.github.io/?https://github.com/govscienceuseR/citationExtract/blob/master/vignettes/sgma.html) tool see the steps that prepared the data we use in this vignette.  
+
+First, be sure to download the citationClassify package from github (`devtools::install_github("govscienceuseR/citationClassify")` and load it in, as below. Also load the packages listed below.  
+
 ```{r setup}
-devtools::install_github("govscienceuseR/citationClassify")
 library(citationClassify)
 packs = c('data.table', 'dplyr', 'stringr')
 sapply(packs, require, character.only = T)
 ```
 
+We will be analyzing potential citations extracted from Groundwater Sustainability Plan documents, previewed below.  
 ```{r}
 dt <- fread("~/Box/citation_classifier/data/gsp_references_clean.csv")
+head(as_tibble(select(dt, -c(File, ID))), n = 10)
 ```
 
+Based on our initial cleaning in the citationExtract package, we can look to see which of these potential citations are exact matches to three different indices: an index of academic journals from the Scimago database, an index of academic conference papers/proceedings also from the Scimago database, and an index of US state and federal agencies, curated by the packages authors. We can look for matches using the `journal_match()`, `conference_match()` and `agency_match()` functions.
 ```{r}
 table(journal_match(dt$container))
 ```
@@ -36,27 +46,21 @@ table(conference_match(dt$container))
 ```{r}
 table(agency_match(dt$container, dt$author))
 ```
+
+After this initial assessment, we can further clean and refine these potential citations with the `prepared_by` function, which removes commonly-seen lead-ins to citations ('prepared for/by', etc.) to improve exact matching.   
 ```{r}
 dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 ```
 
+Next, we disambiguate the journals with the `journal_disambig` function, which references indices of common journal abbreviations and through manual cleaning of journals referenced in transportation documents. We choose to assign this to a new variable, journal_disam.
 ```{r}
 dt$journal_disam <- journal_disambig(dt$container)
 ```
 
-```{r}
-table(journal_match(dt$journal_disam))
-```
 
-```{r}
-table(conference_match(dt$journal_disam))
-```
-
-```{r}
-table(agency_match(dt$journal_disam, dt$author))
-```
-
+Third, we use regular expressions to look at our cleaned data and classify based on exact matches with regular expressions using the `regex_classify()` function. This function does two things. First it looks across all of the columns for exact matches to our indices, and if there is an exact match, it pulls out that value into a 'input' column. If there is not exact match, the value in the input column will be selected in the following order of preference: doi, container, publisher, author, title. Second, based on the matches the function will assign the potential citation into one of four classes: journal, agency, conference, or none. If none of the potential citations' data is an exact match to any of the indices, the classification is NA. 
 ```{r}
 dt <- regex_classify(dt, 'journal_disam')
+table(dt$class)
 ```
 
