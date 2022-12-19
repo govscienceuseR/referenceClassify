@@ -24,7 +24,7 @@ First, be sure to download the citationClassify package from github (`devtools::
 
 ```{r setup}
 library(citationClassify)
-packs = c('data.table', 'dplyr', 'stringr')
+packs = c('data.table', 'dplyr', 'stringr', 'keras', 'tensorflow')
 sapply(packs, require, character.only = T)
 ```
 
@@ -48,27 +48,50 @@ table(agency_match(dt$container, dt$author))
 ```
 
 After this initial assessment, we can further clean and refine these potential citations with the `prepared_by` function, which removes commonly-seen lead-ins to citations ('prepared for/by', etc.) to improve exact matching.   
-```{r}
+```{r prepared by}
 dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 ```
 
 Next, we disambiguate the journals with the `journal_disambig` function, which references indices of common journal abbreviations and through manual cleaning of journals referenced in transportation documents. We choose to assign this to a new variable, journal_disam.
-```{r}
+```{r journal disam}
 dt$journal_disam <- journal_disambig(dt$container)
 ```
 
 
 Third, we use regular expressions to look at our cleaned data and classify based on exact matches with regular expressions using the `regex_classify()` function. This function does two things. First it looks across all of the columns for exact matches to our indices, and if there is an exact match, it pulls out that value into a 'input' column. If there is not exact match, the value in the input column will be selected in the following order of preference: doi, container, publisher, author, title. Second, based on the matches the function will assign the potential citation into one of four classes: journal, agency, conference, or none. If none of the potential citations' data is an exact match to any of the indices, the classification is NA. 
-```{r}
+```{r regex classify}
 dt <- regex_classify(dt, 'journal_disam')
 table(dt$class)
 ```
 
 
-```{r, eval = F}
+```{r keras classify, eval = F}
+setwd("~/")
 dt_classified <- filter(dt, !is.na(class))
 dt_toclassify <- filter(dt, is.na(class))
+# Something is wrong with the auto_input
+# And something is wrong with the path to 
 predictions <- keras_classify(dt_toclassify, probability = .9, 
-                              'journal_disam', auto_input = T)
+                              'journal_disam', auto_input = F, 'training_input')
+dt_toclassify <- cbind(dt_toclassify, predictions)
+```
+
+```{r, eval = F}
+table(dt_toclassify$predict_class)
+```
+
+```{r, eval = F}
+head(as_tibble(select(filter(dt_toclassify, predict_class == "agency"),
+                      author, year, title, container, publisher)), n = 10)
+```
+
+```{r, eval = F}
+head(as_tibble(select(filter(dt_toclassify, predict_class == "journal"),
+                      author, year, title, container, publisher, doi)), n = 10)
+```
+
+```{r, eval = F}
+head(as_tibble(select(filter(dt_toclassify, predict_class == "delete"),
+                      author, year, title, container, publisher)), n = 10)
 ```
 

@@ -13,6 +13,7 @@
 #' @examples dt <- keras_classify(dt, .85, 'journal_disam', auto_input = F, 'input') # manually specifying input
 #'
 #' @import keras
+#' @import kerasR
 #' @import tensorflow
 #' @import dplyr
 #' @import data.table
