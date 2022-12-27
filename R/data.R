@@ -40,4 +40,4 @@
 #' A neural network trained on EIA data
 #'
 #' @format A keras model object
-"keras_model"
+"model"

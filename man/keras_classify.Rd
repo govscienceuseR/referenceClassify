@@ -22,6 +22,8 @@ keras_classify(
 \item{auto_input}{a logical value where if T, the function automatically assign the model input based on a series of conditions. If F, assign your own input_column argument. Default is set to TRUE.}
 
 \item{input_column}{if auto_input = FALSE, the name of the column to use as the model input, as a character object}
+
+\item{download_dir}{the location where the keras model data will be downloaded, defaults to home directory}
 }
 \value{
 a data frame with ffive columns: four representing the probabilities for each class and a fifth column with the classification category based on probability specified in the probability argument

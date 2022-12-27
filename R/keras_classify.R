@@ -26,12 +26,12 @@ keras_classify <- function(df, probability = .9,
                            journal_column, auto_input = T, input_column){
 
   # Below does not work, creates a null pointer
-  ## keras_model <- keras::load_model_tf("data/keras_model")
-  ## usethis::use_data(keras_model)
-  ## data("keras_model", envir=environment())
+  ## model <- keras::load_model_tf("data/k_model")
+  ## usethis::use_data(model)
+  ## data("model", envir=environment())
 
   # This works internally but not functional for package
-  ## model <- keras::load_model_tf("data/keras_model")
+  ## model <- keras::load_model_tf("data/k_model")
 
   # What if I have the function locally download the data before running?
   urls <- c("https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/keras_metadata.pb",
@@ -67,8 +67,8 @@ keras_classify <- function(df, probability = .9,
   download.file(url = urls[4],
                 destfile = paste0(tempdir_var,
                                   '/variables.index'))
-  model <- keras::load_model_tf(tempdir_model)
-  model <- keras::load_model_tf("data/keras_model")
+  model <- load_model_tf(tempdir_model)
+  model <- keras::load_model_tf("data/k_model")
 
   if(auto_input == T){
     df$container_match_journal <- df[[journal_column]] %in% scimago.j$title
