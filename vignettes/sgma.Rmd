@@ -14,8 +14,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = F
+  comment = "#>"
 )
 ```
 
@@ -25,6 +24,8 @@ First, be sure to download the referenceClassify package from github (`devtools:
 
 ```{r setup}
 library(referenceClassify)
+packs = c('data.table', 'dplyr', 'stringr', 'keras', 'tensorflow')
+sapply(packs, require, character.only = T)
 ```
 
 We will be analyzing potential references extracted from Groundwater Sustainability Plan documents, previewed below.  
@@ -65,7 +66,7 @@ table(dt$class)
 
 
 ```{r keras classify}
-setwd("~/")
+setwd("~/Documents/Davis/R-Projects/referenceClassify/")
 dt_classified <- filter(dt, !is.na(class)) %>% 
   mutate(classification = "regex")
 dt_toclassify <- filter(dt, is.na(class))
@@ -76,29 +77,32 @@ predictions <- keras_classify(dt_toclassify, probability = .9,
 dt_toclassify <- cbind(select(dt_toclassify, -class), select(predictions, predict_class)) %>% 
   rename("class" = "predict_class") %>% 
   mutate(classification = "keras")
+```
+
+```{r}
 dt <- rbind(dt_classified, dt_toclassify)
+```
+
+
+```{r}
+table(dt_toclassify$class)
+```
+
+```{r}
+head(as_tibble(select(filter(dt_toclassify, class == "agency"),
+                      author, title, container)), n = 10)
+```
+
+```{r}
+head(as_tibble(select(filter(dt_toclassify, class == "journal"),
+                      author, title, container, doi)), n = 10)
+```
+
+```{r}
+head(as_tibble(select(filter(dt_toclassify, class == "delete"),
+                      author, title, container)), n = 10)
 ```
 
 ```{r}
 write.csv(dt, "~/Documents/Davis/R-Projects/referenceClassify/data/predicted_class.csv", row.names = F)
 ```
-
-```{r, eval = F}
-table(dt_toclassify$predict_class)
-```
-
-```{r, eval = F}
-head(as_tibble(select(filter(dt_toclassify, predict_class == "agency"),
-                      author, year, title, container, publisher)), n = 10)
-```
-
-```{r, eval = F}
-head(as_tibble(select(filter(dt_toclassify, predict_class == "journal"),
-                      author, year, title, container, publisher, doi)), n = 10)
-```
-
-```{r, eval = F}
-head(as_tibble(select(filter(dt_toclassify, predict_class == "delete"),
-                      author, year, title, container, publisher)), n = 10)
-```
-

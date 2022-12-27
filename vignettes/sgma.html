@@ -388,12 +388,30 @@ use in this vignette.</p>
 (<code>devtools::install_github(&quot;govscienceuseR/referenceClassify&quot;)</code>
 and load it in, as below. Also load the packages listed below.</p>
 <pre class="r"><code>library(referenceClassify)
-packs = c(&#39;data.table&#39;, &#39;dplyr&#39;, &#39;stringr&#39;, &#39;keras&#39;, &#39;tensorflow&#39;, &#39;magrittr&#39;)
-sapply(packs, require, character.only = T)</code></pre>
+packs = c(&#39;data.table&#39;, &#39;dplyr&#39;, &#39;stringr&#39;, &#39;keras&#39;, &#39;tensorflow&#39;)
+sapply(packs, require, character.only = T)
+#&gt; Loading required package: tensorflow
+#&gt; Warning: package &#39;tensorflow&#39; was built under R version 4.1.2
+#&gt; data.table      dplyr    stringr      keras tensorflow 
+#&gt;       TRUE       TRUE       TRUE       TRUE      FALSE</code></pre>
 <p>We will be analyzing potential references extracted from Groundwater
 Sustainability Plan documents, previewed below.</p>
 <pre class="r"><code>dt &lt;- fread(&quot;~/Box/reference_classifier/data/gsp_references_clean.csv&quot;)
-head(as_tibble(select(dt, -c(File, ID))), n = 10)</code></pre>
+head(as_tibble(select(dt, -c(File, ID))), n = 10)
+#&gt; # A tibble: 10 × 7
+#&gt;    author                          year title conta…¹ publi…² doi   url  
+#&gt;    &lt;chr&gt;                          &lt;int&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;
+#&gt;  1 &quot;&quot;                                NA &quot;Bel… &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  2 &quot;Burt, CM; Styles, SW&quot;          1998 &quot;&quot;    &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  3 &quot;Burt, CMFreeman; Howe, D&quot;      2010 &quot;San… &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  4 &quot;Styles, Stuart W&quot;              1998 &quot;&quot;    &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  5 &quot;Brownscombe, RH&quot;               1950 &quot;&quot;    &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  6 &quot;Central California Irrigatio…  1996 &quot;&quot;    &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  7 &quot;Cole, RC&quot;                      1948 &quot;Soi… &quot;US De… &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  8 &quot;Cole, RC&quot;                      1952 &quot;Soi… &quot;US De… &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt;  9 &quot;Croft, MG&quot;                     1969 &quot;Sub… &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt; 10 &quot;Davis, GH; Poland, JF&quot;         1957 &quot;Gro… &quot;&quot;      &quot;&quot;      &quot;&quot;    &quot;&quot;   
+#&gt; # … with abbreviated variable names ¹​container, ²​publisher</code></pre>
 <p>Based on our initial cleaning in the referenceExtract package, we can
 look to see which of these potential references are exact matches to
 three different indices: an index of academic journals from the Scimago
@@ -402,9 +420,18 @@ the Scimago database, and an index of US state and federal agencies,
 curated by the packages authors. We can look for matches using the
 <code>journal_match()</code>, <code>conference_match()</code> and
 <code>agency_match()</code> functions.</p>
-<pre class="r"><code>table(journal_match(dt$container))</code></pre>
-<pre class="r"><code>table(conference_match(dt$container))</code></pre>
-<pre class="r"><code>table(agency_match(dt$container, dt$author))</code></pre>
+<pre class="r"><code>table(journal_match(dt$container))
+#&gt; 
+#&gt; FALSE  TRUE 
+#&gt;   641    25</code></pre>
+<pre class="r"><code>table(conference_match(dt$container))
+#&gt; 
+#&gt; FALSE 
+#&gt;   666</code></pre>
+<pre class="r"><code>table(agency_match(dt$container, dt$author))
+#&gt; 
+#&gt; FALSE  TRUE 
+#&gt;   655    11</code></pre>
 <p>After this initial assessment, we can further clean and refine these
 potential references with the <code>prepared_by</code> function, which
 removes commonly-seen lead-ins to references (‘prepared for/by’, etc.)
@@ -429,8 +456,11 @@ journal, agency, conference, or none. If none of the potential
 references’ data is an exact match to any of the indices, the
 classification is NA.</p>
 <pre class="r"><code>dt &lt;- regex_classify(dt, &#39;journal_disam&#39;)
-table(dt$class)</code></pre>
-<pre class="r"><code>setwd(&quot;~/&quot;)
+table(dt$class)
+#&gt; 
+#&gt;     agency    journal remove_row 
+#&gt;         82         26          3</code></pre>
+<pre class="r"><code>setwd(&quot;~/Documents/Davis/R-Projects/referenceClassify/&quot;)
 dt_classified &lt;- filter(dt, !is.na(class)) %&gt;% 
   mutate(classification = &quot;regex&quot;)
 dt_toclassify &lt;- filter(dt, is.na(class))
@@ -440,16 +470,61 @@ predictions &lt;- keras_classify(dt_toclassify, probability = .9,
                               &#39;journal_disam&#39;, auto_input = F, &#39;training_input&#39;)
 dt_toclassify &lt;- cbind(select(dt_toclassify, -class), select(predictions, predict_class)) %&gt;% 
   rename(&quot;class&quot; = &quot;predict_class&quot;) %&gt;% 
-  mutate(classification = &quot;keras&quot;)
-dt &lt;- rbind(dt_classified, dt_toclassify)</code></pre>
+  mutate(classification = &quot;keras&quot;)</code></pre>
+<pre class="r"><code>dt &lt;- rbind(dt_classified, dt_toclassify)</code></pre>
+<pre class="r"><code>table(dt_toclassify$class)
+#&gt; 
+#&gt;  agency  delete journal  unsure 
+#&gt;      42     154      23     290</code></pre>
+<pre class="r"><code>head(as_tibble(select(filter(dt_toclassify, class == &quot;agency&quot;),
+                      author, title, container)), n = 10)
+#&gt; # A tibble: 10 × 3
+#&gt;    author                                           title         conta…¹
+#&gt;    &lt;chr&gt;                                            &lt;chr&gt;         &lt;chr&gt;  
+#&gt;  1 Central California Irrigation District           &lt;NA&gt;          &lt;NA&gt;   
+#&gt;  2 National Resources Conservation Service          &lt;NA&gt;          &lt;NA&gt;   
+#&gt;  3 Ogden, GR                                        Agricultural… SOLO H…
+#&gt;  4 Survey, United States Geological                 Water Resour… &lt;NA&gt;   
+#&gt;  5 Survey, United States Geological                 Central Vall… &lt;NA&gt;   
+#&gt;  6 &lt;NA&gt;                                             DeltaMendota… &lt;NA&gt;   
+#&gt;  7 &lt;NA&gt;                                             National Ele… &lt;NA&gt;   
+#&gt;  8 Survey, National Map Hydrography USGeological    &lt;NA&gt;          &lt;NA&gt;   
+#&gt;  9 Winter, TC; Harvey, JW; Franke, OL; Alley, WM    Ground Water… US Dep…
+#&gt; 10 GUIDANCECalifornia Department of Water Resources California S… &lt;NA&gt;   
+#&gt; # … with abbreviated variable name ¹​container</code></pre>
+<pre class="r"><code>head(as_tibble(select(filter(dt_toclassify, class == &quot;journal&quot;),
+                      author, title, container, doi)), n = 10)
+#&gt; # A tibble: 10 × 4
+#&gt;    author                                             title conta…¹ doi  
+#&gt;    &lt;chr&gt;                                              &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;
+#&gt;  1 &lt;NA&gt;                                               &quot;Sus… &lt;NA&gt;    &lt;NA&gt; 
+#&gt;  2 Corwin, DL                                         &quot;Fie… Journa… &lt;NA&gt; 
+#&gt;  3 Farrar, CD; Bertoldi, GL                           &quot;Reg… Hydrog… &lt;NA&gt; 
+#&gt;  4 Conservancy, The Nature                            &quot;Gro… &lt;NA&gt;    &lt;NA&gt; 
+#&gt;  5 &lt;NA&gt;                                               &quot;The… &lt;NA&gt;    &lt;NA&gt; 
+#&gt;  6 T, Harter; MorelSeytoux, H; MC, Hill; Tiedeman, CR &quot;Pee… &lt;NA&gt;    &lt;NA&gt; 
+#&gt;  7 Sophocleous, M                                     &quot;Gro… USA Jo… &lt;NA&gt; 
+#&gt;  8 &lt;NA&gt;                                               &quot;Urb… &lt;NA&gt;    &lt;NA&gt; 
+#&gt;  9 &lt;NA&gt;                                               &quot;Urb… &lt;NA&gt;    &lt;NA&gt; 
+#&gt; 10 Conservancy, The Nature                            &quot;Gro… &lt;NA&gt;    &lt;NA&gt; 
+#&gt; # … with abbreviated variable name ¹​container</code></pre>
+<pre class="r"><code>head(as_tibble(select(filter(dt_toclassify, class == &quot;delete&quot;),
+                      author, title, container)), n = 10)
+#&gt; # A tibble: 10 × 3
+#&gt;    author                       title                             conta…¹
+#&gt;    &lt;chr&gt;                        &lt;chr&gt;                             &lt;chr&gt;  
+#&gt;  1 &lt;NA&gt;                         Below is a List of Reports Used … &lt;NA&gt;   
+#&gt;  2 Burt, CMFreeman; Howe, D     San Joaquin River Exchange Contr… &lt;NA&gt;   
+#&gt;  3 Brownscombe, RH              &lt;NA&gt;                              &lt;NA&gt;   
+#&gt;  4 Croft, MG                    Subsurface Geology of the Late T… &lt;NA&gt;   
+#&gt;  5 Luhdorff &amp; Scalmanini        Results of Aquifer Tests Near Me… &lt;NA&gt;   
+#&gt;  6 Luhdorff &amp; Scalmanini &amp; KDSA &lt;NA&gt;                              SJRECW…
+#&gt;  7 Page, RW                     Base of Fresh Ground Water Appro… &lt;NA&gt;   
+#&gt;  8 Borchers, JW; Carpenter, M   Land Subsidence from Groundwater… &lt;NA&gt;   
+#&gt;  9 &lt;NA&gt;                         California Aqueduct Subsidence S… &lt;NA&gt;   
+#&gt; 10 &lt;NA&gt;                         DRAFT Best Management Practices … &lt;NA&gt;   
+#&gt; # … with abbreviated variable name ¹​container</code></pre>
 <pre class="r"><code>write.csv(dt, &quot;~/Documents/Davis/R-Projects/referenceClassify/data/predicted_class.csv&quot;, row.names = F)</code></pre>
-<pre class="r"><code>table(dt_toclassify$predict_class)</code></pre>
-<pre class="r"><code>head(as_tibble(select(filter(dt_toclassify, predict_class == &quot;agency&quot;),
-                      author, year, title, container, publisher)), n = 10)</code></pre>
-<pre class="r"><code>head(as_tibble(select(filter(dt_toclassify, predict_class == &quot;journal&quot;),
-                      author, year, title, container, publisher, doi)), n = 10)</code></pre>
-<pre class="r"><code>head(as_tibble(select(filter(dt_toclassify, predict_class == &quot;delete&quot;),
-                      author, year, title, container, publisher)), n = 10)</code></pre>
 
 
 
