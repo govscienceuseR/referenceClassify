@@ -14,7 +14,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = F
 )
 ```
 
@@ -24,7 +25,7 @@ First, be sure to download the citationClassify package from github (`devtools::
 
 ```{r setup}
 library(citationClassify)
-packs = c('data.table', 'dplyr', 'stringr', 'keras', 'tensorflow')
+packs = c('data.table', 'dplyr', 'stringr', 'keras', 'tensorflow', 'magrittr')
 sapply(packs, require, character.only = T)
 ```
 
@@ -65,15 +66,23 @@ table(dt$class)
 ```
 
 
-```{r keras classify, eval = F}
+```{r keras classify, eval = T}
 setwd("~/")
-dt_classified <- filter(dt, !is.na(class))
+dt_classified <- filter(dt, !is.na(class)) %>% 
+  mutate(classification = "regex")
 dt_toclassify <- filter(dt, is.na(class))
 # Something is wrong with the auto_input
-# And something is wrong with the path to 
+# And something is wrong with the path 
 predictions <- keras_classify(dt_toclassify, probability = .9, 
                               'journal_disam', auto_input = F, 'training_input')
-dt_toclassify <- cbind(dt_toclassify, predictions)
+dt_toclassify <- cbind(select(dt_toclassify, -class), select(predictions, predict_class)) %>% 
+  rename("class" = "predict_class") %>% 
+  mutate(classification = "keras")
+dt <- rbind(dt_classified, dt_toclassify)
+```
+
+```{r}
+write.csv(dt, "~/Documents/Davis/R-Projects/citationClassify/data/predicted_class.csv", row.names = F)
 ```
 
 ```{r, eval = F}

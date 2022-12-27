@@ -6,22 +6,14 @@
 \title{A list of journals from the Scimago database}
 \format{
 A data frame with 32227 rows and 1 variable
-
-A data frame with 32227 rows and 1 variable
 }
 \source{
-\url{https://rdrr.io/github/ikashnitsky/sjrdata/man/sjr_journals.html}
-
 \url{https://rdrr.io/github/ikashnitsky/sjrdata/man/sjr_journals.html}
 }
 \usage{
 scimago.j
-
-scimago.j
 }
 \description{
-All journals between 2000-2020
-
 All journals between 2000-2020
 }
 \keyword{datasets}

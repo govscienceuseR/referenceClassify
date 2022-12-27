@@ -8,14 +8,16 @@ regex_classify(df, journal_column)
 }
 \arguments{
 \item{df}{a data frame or data table output from the journal_disambig() function (has columns:)}
+
+\item{journal_column}{the name}
 }
 \value{
-a data frame with two new columns: training_column and class
+a data frame with two new columns: training_input and class
 }
 \description{
-Matches citations to journals, agencies, conferences, and patterns of non-matches (e.g. dates, photos, etc.) to classify them into one of those four groups.
+Matches references to journals, agencies, conferences, and patterns of non-matches (e.g. dates, photos, etc.) to classify them into one of those four groups.
 }
 \examples{
-df <- regex_classify(df)
+df <- regex_classify(df, 'journal_disam')
 
 }

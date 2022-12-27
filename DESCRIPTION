@@ -1,6 +1,6 @@
-Package: citationClassify
+Package: referenceClassify
 Type: Package
-Title: Classifies Citation Types From Anystyle.io 
+Title: Classifies reference Types From Anystyle.io 
 Version: 0.1.0
 Authors@R: 
     c( 
@@ -12,7 +12,7 @@ Authors@R:
            family = "Scott",
            role = c("aut")))
 Description: 
-    citationClassify is...
+    referenceClassify is...
 License: ?
 Encoding: UTF-8
 LazyData: true

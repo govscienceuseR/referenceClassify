@@ -1,6 +1,6 @@
 #' Run Keras Model on Data
 #'
-#' Makes a prediction about the classification of the citation -- a journal, an agency, a conference, or not a citation. Classifications are designated based on 95% confidence
+#' Makes a prediction about the classification of the reference -- a journal, an agency, a conference, or not a reference. Classifications are designated based on 95% confidence
 #'
 #' @param df a data frame with the input data
 #' @param probability a numeric value between 0-1 indicating that value
@@ -13,10 +13,10 @@
 #' @examples dt <- keras_classify(dt, .85, 'journal_disam', auto_input = F, 'input') # manually specifying input
 #'
 #' @import keras
-#' @import kerasR
 #' @import tensorflow
 #' @import dplyr
 #' @import data.table
+#' @import magrittr
 #' @export
 
 

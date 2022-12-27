@@ -4,18 +4,33 @@
 \alias{keras_classify}
 \title{Run Keras Model on Data}
 \usage{
-keras_classify(df)
+keras_classify(
+  df,
+  probability = 0.9,
+  journal_column,
+  auto_input = T,
+  input_column
+)
 }
 \arguments{
-\item{df}{a data frame with the following column names: container, title, author, journal, doi,}
+\item{df}{a data frame with the input data}
+
+\item{probability}{a numeric value between 0-1 indicating that value}
+
+\item{journal_column}{the name of the column that contains journal articles, as a character object. If using the govscienceuseR workflow, this column name is either container, journal, or journal_disam.}
+
+\item{auto_input}{a logical value where if T, the function automatically assign the model input based on a series of conditions. If F, assign your own input_column argument. Default is set to TRUE.}
+
+\item{input_column}{if auto_input = FALSE, the name of the column to use as the model input, as a character object}
 }
 \value{
-the input data frame with five vectors appended: a column for each classification option with probabilities of classification and a fifth column with the classification for >95\% probability (<95\% probability for any label is marked 'unsure')
+a data frame with ffive columns: four representing the probabilities for each class and a fifth column with the classification category based on probability specified in the probability argument
 }
 \description{
-Makes a prediction about the classification of the citation -- a journal, an agency, a conference, or not a citation. Classifications are designated based on 95\% confidence
+Makes a prediction about the classification of the reference -- a journal, an agency, a conference, or not a reference. Classifications are designated based on 95\% confidence
 }
 \examples{
-dt <- keras_classify(dt)
+dt <- keras_classify(dt, .85, 'journal_disam') # with auto input
+dt <- keras_classify(dt, .85, 'journal_disam', auto_input = F, 'input') # manually specifying input
 
 }

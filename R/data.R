@@ -40,6 +40,4 @@
 #' A neural network trained on EIA data
 #'
 #' @format A keras model object
-
-#' @source \url{input URL}
 "keras_model"

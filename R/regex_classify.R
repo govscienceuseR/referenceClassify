@@ -1,6 +1,6 @@
 #' Classification With Regex
 #'
-#' Matches citations to journals, agencies, conferences, and patterns of non-matches (e.g. dates, photos, etc.) to classify them into one of those four groups.
+#' Matches references to journals, agencies, conferences, and patterns of non-matches (e.g. dates, photos, etc.) to classify them into one of those four groups.
 #'
 #' @param df a data frame or data table output from the journal_disambig() function (has columns:)
 #' @param journal_column the name
@@ -21,7 +21,7 @@ regex_classify <- function(df, journal_column){
   data("scimago.c", envir=environment())
   agency.pattern <- paste(agencies$Agency, collapse = "\\b|\\b")
 
-  # These should have already been removed in the citation_clean function, but just in case
+  # These should have already been removed in the reference_clean function, but just in case
   rm_word <- c( '^[a-z]\\.\\s', # Many authors begind with a. b. or c. etc as if its a list.
                 "^,\\s", # Dealing with if NAs were in the start
                 "^,$", # If it pasted 2 empties

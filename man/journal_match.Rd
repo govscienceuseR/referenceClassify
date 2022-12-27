@@ -21,4 +21,5 @@ Creates a logical vector as to whether a journal name is an exact match to an in
 \examples{
 dt$journal_match <- journal_match(dt$container)
 
+
 }
