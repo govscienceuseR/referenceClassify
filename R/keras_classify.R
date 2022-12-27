@@ -3,6 +3,7 @@
 #' Makes a prediction about the classification of the reference -- a journal, an agency, a conference, or not a reference. Classifications are designated based on 95% confidence
 #'
 #' @param df a data frame with the input data
+#' @param download_dir the location where the keras model data will be downloaded, defaults to home directory
 #' @param probability a numeric value between 0-1 indicating that value
 #' @param journal_column the name of the column that contains journal articles, as a character object. If using the govscienceuseR workflow, this column name is either container, journal, or journal_disam.
 #' @param auto_input a logical value where if T, the function automatically assign the model input based on a series of conditions. If F, assign your own input_column argument. Default is set to TRUE.
@@ -17,13 +18,56 @@
 #' @import dplyr
 #' @import data.table
 #' @import magrittr
+#' @import stringr
 #' @export
 
 
 keras_classify <- function(df, probability = .9,
                            journal_column, auto_input = T, input_column){
 
-  #data(keras::load_model_tf("keras_model"), envir=environment())
+  # Below does not work, creates a null pointer
+  ## keras_model <- keras::load_model_tf("data/keras_model")
+  ## usethis::use_data(keras_model)
+  ## data("keras_model", envir=environment())
+
+  # This works internally but not functional for package
+  ## model <- keras::load_model_tf("data/keras_model")
+
+  # What if I have the function locally download the data before running?
+  urls <- c("https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/keras_metadata.pb",
+            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/saved_model.pb",
+            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/variables/variables.data-00000-of-00001",
+            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/variables/variables.index"
+            )
+
+  tempdir_model <- file.path(tempdir(), "keras")
+  tempdir_var <- file.path(paste0(tempdir_model, "/variables"))
+  tempdir_assets <- file.path(paste0(tempdir_model, "/assets"))
+  dir.create(tempdir_model)
+  dir.create(tempdir_var)
+  dir.create(tempdir_assets)
+
+  #download_dir = download_dir
+  #dir_model <- file.path(download_dir, "keras")
+  #dir_var <- file.path(paste0(dir_model, "/variables"))
+  #dir_assets <- file.path(paste0(dir_model, "/assets"))
+  #dir.create(dir_model)
+  #dir.create(dir_var)
+  #dir.create(dir_assets)
+
+  download.file(url = urls[1],
+                destfile = paste0(tempdir_model,
+                                  '/keras_metadata.pb'))
+  download.file(url = urls[2],
+                destfile = paste0(tempdir_model,
+                                  '/saved_model.pb'))
+  download.file(url = urls[3],
+                destfile = paste0(tempdir_var,
+                                  '/variables.data-00000-of-00001'))
+  download.file(url = urls[4],
+                destfile = paste0(tempdir_var,
+                                  '/variables.index'))
+  model <- keras::load_model_tf(tempdir_model)
   model <- keras::load_model_tf("data/keras_model")
 
   if(auto_input == T){
