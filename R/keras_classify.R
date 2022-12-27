@@ -34,10 +34,10 @@ keras_classify <- function(df, probability = .9,
   ## model <- keras::load_model_tf("data/k_model")
 
   # What if I have the function locally download the data before running?
-  urls <- c("https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/keras_metadata.pb",
-            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/saved_model.pb",
-            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/variables/variables.data-00000-of-00001",
-            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/keras_model/variables/variables.index"
+  urls <- c("https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/keras_metadata.pb",
+            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/saved_model.pb",
+            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/variables/variables.data-00000-of-00001",
+            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/variables/variables.index"
             )
 
   tempdir_model <- file.path(tempdir(), "keras")
@@ -46,14 +46,6 @@ keras_classify <- function(df, probability = .9,
   dir.create(tempdir_model)
   dir.create(tempdir_var)
   dir.create(tempdir_assets)
-
-  #download_dir = download_dir
-  #dir_model <- file.path(download_dir, "keras")
-  #dir_var <- file.path(paste0(dir_model, "/variables"))
-  #dir_assets <- file.path(paste0(dir_model, "/assets"))
-  #dir.create(dir_model)
-  #dir.create(dir_var)
-  #dir.create(dir_assets)
 
   download.file(url = urls[1],
                 destfile = paste0(tempdir_model,

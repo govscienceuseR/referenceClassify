@@ -25,8 +25,6 @@ First, be sure to download the referenceClassify package from github (`devtools:
 
 ```{r setup}
 library(referenceClassify)
-packs = c('data.table', 'dplyr', 'stringr', 'keras', 'tensorflow', 'magrittr')
-sapply(packs, require, character.only = T)
 ```
 
 We will be analyzing potential references extracted from Groundwater Sustainability Plan documents, previewed below.  
