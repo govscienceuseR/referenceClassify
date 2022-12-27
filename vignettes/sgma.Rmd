@@ -1,5 +1,5 @@
 ---
-title: "citationClassify"
+title: "referenceClassify"
 subtitle: "A vignette using California's Groundwater Sustainability Plan documents"
 output: html_document
 ---
@@ -19,23 +19,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-The citationClassify tool from govscienceuseR is designed to take a data frame of tagged citation data (author, year, container, publisher, doi, etc), run exact matching to various citation indices, and further classify potential citations into categories. We walk through these steps using California's Groundwater Sustainability Plan PDF documents. Check out the [vignette on the citationExtract](http://htmlpreview.github.io/?https://github.com/govscienceuseR/citationExtract/blob/master/vignettes/sgma.html) tool see the steps that prepared the data we use in this vignette.  
+The referenceClassify tool from govscienceuseR is designed to take a data frame of tagged reference data (author, year, container, publisher, doi, etc), run exact matching to various reference indices, and further classify potential references into categories. We walk through these steps using California's Groundwater Sustainability Plan PDF documents. Check out the [vignette on the referenceExtract](http://htmlpreview.github.io/?https://github.com/govscienceuseR/referenceExtract/blob/master/vignettes/sgma.html) tool see the steps that prepared the data we use in this vignette.  
 
-First, be sure to download the citationClassify package from github (`devtools::install_github("govscienceuseR/citationClassify")` and load it in, as below. Also load the packages listed below.  
+First, be sure to download the referenceClassify package from github (`devtools::install_github("govscienceuseR/referenceClassify")` and load it in, as below. Also load the packages listed below.  
 
 ```{r setup}
-library(citationClassify)
+library(referenceClassify)
 packs = c('data.table', 'dplyr', 'stringr', 'keras', 'tensorflow', 'magrittr')
 sapply(packs, require, character.only = T)
 ```
 
-We will be analyzing potential citations extracted from Groundwater Sustainability Plan documents, previewed below.  
+We will be analyzing potential references extracted from Groundwater Sustainability Plan documents, previewed below.  
 ```{r}
-dt <- fread("~/Box/citation_classifier/data/gsp_references_clean.csv")
+dt <- fread("~/Box/reference_classifier/data/gsp_references_clean.csv")
 head(as_tibble(select(dt, -c(File, ID))), n = 10)
 ```
 
-Based on our initial cleaning in the citationExtract package, we can look to see which of these potential citations are exact matches to three different indices: an index of academic journals from the Scimago database, an index of academic conference papers/proceedings also from the Scimago database, and an index of US state and federal agencies, curated by the packages authors. We can look for matches using the `journal_match()`, `conference_match()` and `agency_match()` functions.
+Based on our initial cleaning in the referenceExtract package, we can look to see which of these potential references are exact matches to three different indices: an index of academic journals from the Scimago database, an index of academic conference papers/proceedings also from the Scimago database, and an index of US state and federal agencies, curated by the packages authors. We can look for matches using the `journal_match()`, `conference_match()` and `agency_match()` functions.
 ```{r}
 table(journal_match(dt$container))
 ```
@@ -48,7 +48,7 @@ table(conference_match(dt$container))
 table(agency_match(dt$container, dt$author))
 ```
 
-After this initial assessment, we can further clean and refine these potential citations with the `prepared_by` function, which removes commonly-seen lead-ins to citations ('prepared for/by', etc.) to improve exact matching.   
+After this initial assessment, we can further clean and refine these potential references with the `prepared_by` function, which removes commonly-seen lead-ins to references ('prepared for/by', etc.) to improve exact matching.   
 ```{r prepared by}
 dt <- prepared_by(dt, x = 'container', y = 'author', z = 'publisher')
 ```
@@ -59,14 +59,14 @@ dt$journal_disam <- journal_disambig(dt$container)
 ```
 
 
-Third, we use regular expressions to look at our cleaned data and classify based on exact matches with regular expressions using the `regex_classify()` function. This function does two things. First it looks across all of the columns for exact matches to our indices, and if there is an exact match, it pulls out that value into a 'input' column. If there is not exact match, the value in the input column will be selected in the following order of preference: doi, container, publisher, author, title. Second, based on the matches the function will assign the potential citation into one of four classes: journal, agency, conference, or none. If none of the potential citations' data is an exact match to any of the indices, the classification is NA. 
+Third, we use regular expressions to look at our cleaned data and classify based on exact matches with regular expressions using the `regex_classify()` function. This function does two things. First it looks across all of the columns for exact matches to our indices, and if there is an exact match, it pulls out that value into a 'input' column. If there is not exact match, the value in the input column will be selected in the following order of preference: doi, container, publisher, author, title. Second, based on the matches the function will assign the potential reference into one of four classes: journal, agency, conference, or none. If none of the potential references' data is an exact match to any of the indices, the classification is NA. 
 ```{r regex classify}
 dt <- regex_classify(dt, 'journal_disam')
 table(dt$class)
 ```
 
 
-```{r keras classify, eval = T}
+```{r keras classify}
 setwd("~/")
 dt_classified <- filter(dt, !is.na(class)) %>% 
   mutate(classification = "regex")
@@ -82,7 +82,7 @@ dt <- rbind(dt_classified, dt_toclassify)
 ```
 
 ```{r}
-write.csv(dt, "~/Documents/Davis/R-Projects/citationClassify/data/predicted_class.csv", row.names = F)
+write.csv(dt, "~/Documents/Davis/R-Projects/referenceClassify/data/predicted_class.csv", row.names = F)
 ```
 
 ```{r, eval = F}
