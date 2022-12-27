@@ -34,32 +34,32 @@ keras_classify <- function(df, probability = .9,
   ## model <- keras::load_model_tf("data/k_model")
 
   # What if I have the function locally download the data before running?
-  urls <- c("https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/keras_metadata.pb",
-            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/saved_model.pb",
-            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/variables/variables.data-00000-of-00001",
-            "https://github.com/govscienceuseR/referenceClassify/blob/master/data/k_model/variables/variables.index"
-            )
-
-  tempdir_model <- file.path(tempdir(), "keras")
-  tempdir_var <- file.path(paste0(tempdir_model, "/variables"))
-  tempdir_assets <- file.path(paste0(tempdir_model, "/assets"))
-  dir.create(tempdir_model)
-  dir.create(tempdir_var)
-  dir.create(tempdir_assets)
-
-  download.file(url = urls[1],
-                destfile = paste0(tempdir_model,
-                                  '/keras_metadata.pb'))
-  download.file(url = urls[2],
-                destfile = paste0(tempdir_model,
-                                  '/saved_model.pb'))
-  download.file(url = urls[3],
-                destfile = paste0(tempdir_var,
-                                  '/variables.data-00000-of-00001'))
-  download.file(url = urls[4],
-                destfile = paste0(tempdir_var,
-                                  '/variables.index'))
-  model <- load_model_tf(tempdir_model)
+##   urls <- c("https://github.com/govscienceuseR/referenceClassify/blob/master## /data/k_model/keras_metadata.pb",
+##             "https://github.com/govscienceuseR/referenceClassify/blob/master## /data/k_model/saved_model.pb",
+##             "https://github.com/govscienceuseR/referenceClassify/blob/master## /data/k_model/variables/variables.data-00000-of-00001",
+##             "https://github.com/govscienceuseR/referenceClassify/blob/master## /data/k_model/variables/variables.index"
+##             )
+##
+##   tempdir_model <- file.path(tempdir(), "keras")
+##   tempdir_var <- file.path(paste0(tempdir_model, "/variables"))
+##   tempdir_assets <- file.path(paste0(tempdir_model, "/assets"))
+##   dir.create(tempdir_model)
+##   dir.create(tempdir_var)
+##   dir.create(tempdir_assets)
+##
+##   download.file(url = urls[1],
+##                 destfile = paste0(tempdir_model,
+##                                   '/keras_metadata.pb'))
+##   download.file(url = urls[2],
+##                 destfile = paste0(tempdir_model,
+##                                   '/saved_model.pb'))
+##   download.file(url = urls[3],
+##                 destfile = paste0(tempdir_var,
+##                                   '/variables.data-00000-of-00001'))
+##   download.file(url = urls[4],
+##                 destfile = paste0(tempdir_var,
+##                                   '/variables.index'))
+##   model <- load_model_tf(tempdir_model)
   model <- keras::load_model_tf("data/k_model")
 
   if(auto_input == T){
