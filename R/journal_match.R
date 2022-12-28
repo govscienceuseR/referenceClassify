@@ -14,8 +14,10 @@
 #' @export
 
 journal_match <- function(x, append = F, append_df){
+  #This scimago.j is from eia_citations 01_
+  #scimago.j <- read.csv("~/Box/truckee/data/eia_data/journal_list.csv")
   #scimago.j <- data.table(readRDS("data/journal_list.RDS"))
-  #usethis::use_data(scimago.j)
+  #usethis::use_data(scimago.j, overwrite = T)
   data("scimago.j", envir=environment())
   if(append == T){
     scimago.j <- rbind(scimago.j, append_df)
