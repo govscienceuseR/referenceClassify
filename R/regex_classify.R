@@ -87,8 +87,8 @@ df <- df %>%
       !is.na(doi) ~ doi,
       !is.na(container) ~ container,
       !is.na(publisher) ~ publisher,
-      !is.na(author) ~ author,
       !is.na(title) ~ title,
+      !is.na(author) ~ author,
       T ~ NA_character_
     )) %>%
   # Get rid of data that has nothing to train on

@@ -388,12 +388,41 @@ use in this vignette.</p>
 (<code>devtools::install_github(&quot;govscienceuseR/referenceClassify&quot;)</code>
 and load it in, as below. Also load the packages listed below.</p>
 <pre class="r"><code>library(referenceClassify)
+#&gt; Warning: replacing previous import &#39;data.table::last&#39; by &#39;dplyr::last&#39;
+#&gt; when loading &#39;referenceClassify&#39;
+#&gt; Warning: replacing previous import &#39;data.table::first&#39; by &#39;dplyr::first&#39;
+#&gt; when loading &#39;referenceClassify&#39;
+#&gt; Warning: replacing previous import &#39;data.table::between&#39; by
+#&gt; &#39;dplyr::between&#39; when loading &#39;referenceClassify&#39;
 packs = c(&#39;data.table&#39;, &#39;dplyr&#39;, &#39;stringr&#39;, &#39;keras&#39;, &#39;tensorflow&#39;)
 sapply(packs, require, character.only = T)
+#&gt; Loading required package: data.table
+#&gt; Warning: package &#39;data.table&#39; was built under R version 4.1.2
+#&gt; data.table 1.14.6 using 1 threads (see ?getDTthreads).  Latest news: r-datatable.com
+#&gt; **********
+#&gt; This installation of data.table has not detected OpenMP support. It should still work but in single-threaded mode.
+#&gt; This is a Mac. Please read https://mac.r-project.org/openmp/. Please engage with Apple and ask them for support. Check r-datatable.com for updates, and our Mac instructions here: https://github.com/Rdatatable/data.table/wiki/Installation. After several years of many reports of installation problems on Mac, it&#39;s time to gingerly point out that there have been no similar problems on Windows or Linux.
+#&gt; **********
+#&gt; Loading required package: dplyr
+#&gt; 
+#&gt; Attaching package: &#39;dplyr&#39;
+#&gt; The following objects are masked from &#39;package:data.table&#39;:
+#&gt; 
+#&gt;     between, first, last
+#&gt; The following objects are masked from &#39;package:stats&#39;:
+#&gt; 
+#&gt;     filter, lag
+#&gt; The following objects are masked from &#39;package:base&#39;:
+#&gt; 
+#&gt;     intersect, setdiff, setequal, union
+#&gt; Loading required package: stringr
+#&gt; Warning: package &#39;stringr&#39; was built under R version 4.1.2
+#&gt; Loading required package: keras
+#&gt; Warning: package &#39;keras&#39; was built under R version 4.1.2
 #&gt; Loading required package: tensorflow
 #&gt; Warning: package &#39;tensorflow&#39; was built under R version 4.1.2
 #&gt; data.table      dplyr    stringr      keras tensorflow 
-#&gt;       TRUE       TRUE       TRUE       TRUE      FALSE</code></pre>
+#&gt;       TRUE       TRUE       TRUE       TRUE       TRUE</code></pre>
 <p>We will be analyzing potential references extracted from Groundwater
 Sustainability Plan documents, previewed below.</p>
 <pre class="r"><code>dt &lt;- fread(&quot;~/Box/reference_classifier/data/gsp_references_clean.csv&quot;)
