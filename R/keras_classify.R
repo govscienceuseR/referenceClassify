@@ -3,7 +3,6 @@
 #' Makes a prediction about the classification of the reference -- a journal, an agency, a conference, or not a reference. Classifications are designated based on 95% confidence
 #'
 #' @param df a data frame with the input data
-#' @param download_dir the location where the keras model data will be downloaded, defaults to home directory
 #' @param probability a numeric value between 0-1 indicating that value
 #' @param journal_column the name of the column that contains journal articles, as a character object. If using the govscienceuseR workflow, this column name is either container, journal, or journal_disam.
 #' @param auto_input a logical value where if T, the function automatically assign the model input based on a series of conditions. If F, assign your own input_column argument. Default is set to TRUE.
@@ -60,7 +59,7 @@ keras_classify <- function(df, probability = .9,
 ##                 destfile = paste0(tempdir_var,
 ##                                   '/variables.index'))
 ##   model <- load_model_tf(tempdir_model)
-  model <- keras::load_model_tf("data/k_model")
+  tf_model <- load_keras_model()
 
   if(auto_input == T){
     df$container_match_journal <- df[[journal_column]] %in% scimago.j$title
@@ -92,7 +91,7 @@ keras_classify <- function(df, probability = .9,
     df$input <- df[[input_column]]
   }
 
-  pred <- model %>%
+  pred <- tf_model %>%
     predict(df$input) %>%
     data.table(.) %>%
     rename("class_journal" = "V1", "class_agency" = "V2",
