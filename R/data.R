@@ -34,10 +34,3 @@
 
 #' @source \url{https://rdrr.io/github/ikashnitsky/sjrdata/man/sjr_journals.html}
 "scimago.c"
-
-#' Keras model
-#'
-#' A neural network trained on EIA data
-#'
-#' @format A keras model object
-"model"
