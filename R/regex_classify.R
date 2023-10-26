@@ -56,7 +56,7 @@ regex_classify <- function(df, journal_column){
   rm_word <- paste(rm_word, collapse="|")
 
   df <- df %>%
-    mutate_all(na_if,"") %>%
+    #mutate_all(na_if,"") %>%
     mutate(container = str_remove_all(container, rm_word),
            publisher = str_remove_all(publisher, rm_word),
            title = str_remove_all(title, rm_word))
